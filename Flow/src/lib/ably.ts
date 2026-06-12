@@ -16,12 +16,12 @@ function getRest(): Ably.Rest {
 /** Nội dung message gửi lên Ably khi bấm Run. */
 export interface RunMessage {
   flowId: string
-  name: string | null
+  flowName: string | null  // Đổi từ "name" → "flowName" để tránh nhầm với event name
   at: string // ISO time
 }
 
 /** Publish sự kiện "run" kèm id file flow lên kênh Ably. */
 export async function publishRun(flowId: string, name: string | null): Promise<void> {
-  const payload: RunMessage = { flowId, name, at: new Date().toISOString() }
+  const payload: RunMessage = { flowId, flowName: name, at: new Date().toISOString() }
   await getRest().channels.get(CHANNEL).publish('run', payload)
 }
