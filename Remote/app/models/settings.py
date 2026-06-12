@@ -24,10 +24,11 @@ class Settings:
     # --- Web UI ---
     host: str = "127.0.0.1"
     port: int = 8765
-    # --- Thiết bị / driver ---
+    # --- Device / driver ---
     adb_path: str = ""
     device_serial: str = ""
     driver: str = "adb"  # adb | dummy
+    adb_scan_interval: int = 5  # seconds between device scans in dashboard
     # --- Engine ---
     max_parallel_tasks: int = 4
     screenshot_dir: str = "screenshots"
