@@ -1,0 +1,15 @@
+# Bí mật & cài đặt cục bộ
+.env
+config.json
+
+# Artefact runtime
+screenshots/
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/

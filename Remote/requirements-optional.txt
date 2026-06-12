@@ -1,0 +1,16 @@
+# Dependencies TÙY CHỌN — chỉ cài khi cần tính năng tương ứng.
+#   pip install -r requirements-optional.txt
+#
+# Engine tự phát hiện lib nào có mặt (lazy import) và degrade nhẹ nếu thiếu:
+#   - Thiếu opencv  -> findElement bằng ảnh báo lỗi rõ ràng, các node khác vẫn chạy.
+#   - Thiếu pysher  -> node pusherListen bị bỏ qua kèm cảnh báo.
+#   - Thiếu ably    -> trigger "Run" từ web app tắt; vẫn chạy thủ công qua UI/CLI.
+#
+# LƯU Ý Termux: opencv-python thường KHÔNG cài được bằng pip. Trên Termux dùng:
+#   pkg install python-numpy opencv-python
+# hoặc bỏ qua so khớp ảnh và dùng selector uiautomator.
+
+opencv-python>=4.8       # findElement: template matching trên ảnh màn hình
+numpy>=1.24              # đi kèm opencv
+pysher>=1.0.8            # node pusherListen: client Pusher (websocket)
+ably>=2.0                # trigger "Run": lắng nghe kênh flow-run từ web app

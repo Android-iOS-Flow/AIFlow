@@ -1,0 +1,10 @@
+# Dependencies BẮT BUỘC — cài được trên cả Windows lẫn Termux (Android)
+#   pip install -r requirements.txt
+#
+# Đây là core tối thiểu để engine + web UI chạy. Các tính năng nâng cao
+# (so khớp ảnh, Pusher, Ably) nằm ở requirements-optional.txt để Termux
+# không phải build các lib nặng nếu chưa cần.
+
+Flask>=3.0,<4.0          # web UI cài đặt + dashboard (MVC: View/Controller)
+requests>=2.31           # gọi Supabase REST để tải FlowDocument
+python-dotenv>=1.0       # nạp biến môi trường từ .env (tùy chọn nhưng tiện)

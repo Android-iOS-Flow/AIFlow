@@ -1,0 +1,15 @@
+{
+  "_comment": "Sao chép thành config.json (web UI tự tạo nếu chưa có). Đây là nguồn cài đặt CHÍNH lúc chạy; .env chỉ cấp giá trị mặc định ban đầu.",
+  "supabase_url": "",
+  "supabase_publishable_key": "",
+  "ably_api_key": "",
+  "ably_channel": "flow-run",
+  "host": "127.0.0.1",
+  "port": 8765,
+  "adb_path": "",
+  "device_serial": "",
+  "driver": "adb",
+  "max_parallel_tasks": 4,
+  "screenshot_dir": "screenshots",
+  "auto_start_trigger": false
+}

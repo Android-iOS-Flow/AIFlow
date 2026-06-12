@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}Cài đặt · AIFlow Remote{% endblock %}
+{% block content %}
+<form method="post" action="{{ url_for('settings_save') }}" class="settings">
+  <section class="card">
+    <h2>Supabase</h2>
+    <p class="muted">Nguồn đọc FlowDocument. Chỉ dùng publishable/anon key.</p>
+    <label>URL dự án
+      <input type="text" name="supabase_url" value="{{ settings.supabase_url }}"
+             placeholder="https://xxxx.supabase.co">
+    </label>
+    <label>Publishable key
+      <input type="password" name="supabase_publishable_key" value="{{ settings.supabase_publishable_key }}">
+    </label>
+  </section>
+
+  <section class="card">
+    <h2>Ably — trigger “Run”</h2>
+    <p class="muted">Nhận lệnh chạy flow từ web app.</p>
+    <label>API key
+      <input type="password" name="ably_api_key" value="{{ settings.ably_api_key }}">
+    </label>
+    <label>Kênh (channel)
+      <input type="text" name="ably_channel" value="{{ settings.ably_channel }}" placeholder="flow-run">
+    </label>
+    <label class="check">
+      <input type="checkbox" name="auto_start_trigger" value="true"
+             {% if settings.auto_start_trigger %}checked{% endif %}>
+      Tự bật trigger khi khởi động
+    </label>
+  </section>
+
+  <section class="card">
+    <h2>Thiết bị &amp; Driver</h2>
+    <label>Driver
+      <select name="driver">
+        <option value="adb" {% if settings.driver=='adb' %}selected{% endif %}>adb (điều khiển thật)</option>
+        <option value="dummy" {% if settings.driver=='dummy' %}selected{% endif %}>dummy (chỉ log — test)</option>
+      </select>
+    </label>
+    <label>Đường dẫn adb <span class="muted small">(để trống = tự dò)</span>
+      <input type="text" name="adb_path" value="{{ settings.adb_path }}"
+             placeholder="adb / /data/data/com.termux/files/usr/bin/adb">
+    </label>
+    <label>Device serial <span class="muted small">(khi cắm nhiều máy)</span>
+      <input type="text" name="device_serial" value="{{ settings.device_serial }}">
+    </label>
+    <label>Thư mục lưu ảnh
+      <input type="text" name="screenshot_dir" value="{{ settings.screenshot_dir }}">
+    </label>
+  </section>
+
+  <section class="card">
+    <h2>Engine &amp; Web</h2>
+    <div class="two">
+      <label>Số task song song tối đa
+        <input type="number" name="max_parallel_tasks" min="1" max="32" value="{{ settings.max_parallel_tasks }}">
+      </label>
+      <label>Cổng web
+        <input type="number" name="port" value="{{ settings.port }}">
+      </label>
+    </div>
+    <label>Host web <span class="muted small">(0.0.0.0 để truy cập từ máy khác)</span>
+      <input type="text" name="host" value="{{ settings.host }}">
+    </label>
+    <p class="muted small">Đổi host/cổng cần khởi động lại tiến trình mới có hiệu lực.</p>
+  </section>
+
+  <div class="actions">
+    <button class="btn" type="submit">💾 Lưu cài đặt</button>
+    <a class="btn ghost" href="{{ url_for('dashboard') }}">Huỷ</a>
+  </div>
+</form>
+{% endblock %}
