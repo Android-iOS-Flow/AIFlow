@@ -1,0 +1,126 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "pusher_1",
+      "type": "pusherListen",
+      "position": { "x": 220, "y": 0 },
+      "data": {
+        "type": "pusherListen",
+        "label": "Pusher Listen",
+        "values": {
+          "appKey": "a1b2c3d4e5f6",
+          "cluster": "ap1",
+          "channel": "device-001",
+          "event": "command"
+        }
+      }
+    },
+    {
+      "id": "switch_1",
+      "type": "switch",
+      "position": { "x": 220, "y": 140 },
+      "data": {
+        "type": "switch",
+        "label": "Switch (Router)",
+        "values": {
+          "source": "payload.command",
+          "cases": "login,post"
+        }
+      }
+    },
+
+    {
+      "id": "login_open",
+      "type": "managerApp",
+      "position": { "x": 0, "y": 320 },
+      "data": {
+        "type": "managerApp",
+        "label": "Manager App",
+        "values": { "action": "open", "package": "com.example.login", "permission": "" }
+      }
+    },
+    {
+      "id": "login_tap",
+      "type": "tap",
+      "position": { "x": 0, "y": 440 },
+      "data": { "type": "tap", "label": "Tap", "values": { "x": { "$global": "loginX" }, "y": { "$global": "loginY" } } }
+    },
+    {
+      "id": "login_input",
+      "type": "inputText",
+      "position": { "x": 0, "y": 560 },
+      "data": {
+        "type": "inputText",
+        "label": "Input Text",
+        "values": { "text": { "$global": "username" }, "selector": "#email" }
+      }
+    },
+    {
+      "id": "login_end",
+      "type": "end",
+      "position": { "x": 0, "y": 680 },
+      "data": { "type": "end", "label": "End", "values": {} }
+    },
+
+    {
+      "id": "post_open",
+      "type": "managerApp",
+      "position": { "x": 260, "y": 320 },
+      "data": {
+        "type": "managerApp",
+        "label": "Manager App",
+        "values": { "action": "open", "package": "com.example.social", "permission": "" }
+      }
+    },
+    {
+      "id": "post_tap",
+      "type": "tap",
+      "position": { "x": 260, "y": 440 },
+      "data": { "type": "tap", "label": "Tap", "values": { "x": 980, "y": 220 } }
+    },
+    {
+      "id": "post_end",
+      "type": "end",
+      "position": { "x": 260, "y": 560 },
+      "data": { "type": "end", "label": "End", "values": {} }
+    },
+
+    {
+      "id": "default_shot",
+      "type": "screenshot",
+      "position": { "x": 520, "y": 320 },
+      "data": {
+        "type": "screenshot",
+        "label": "Screenshot",
+        "values": { "filename": { "$var": "screenshotName" } }
+      }
+    },
+    {
+      "id": "default_end",
+      "type": "end",
+      "position": { "x": 520, "y": 440 },
+      "data": { "type": "end", "label": "End", "values": {} }
+    }
+  ],
+  "edges": [
+    { "id": "e_pusher_switch", "source": "pusher_1", "target": "switch_1", "type": "deletable", "animated": true },
+
+    { "id": "e_sw_login", "source": "switch_1", "sourceHandle": "login", "target": "login_open", "type": "deletable", "animated": true },
+    { "id": "e_login_tap", "source": "login_open", "target": "login_tap", "type": "deletable", "animated": true },
+    { "id": "e_login_input", "source": "login_tap", "target": "login_input", "type": "deletable", "animated": true },
+    { "id": "e_login_end", "source": "login_input", "target": "login_end", "type": "deletable", "animated": true },
+
+    { "id": "e_sw_post", "source": "switch_1", "sourceHandle": "post", "target": "post_open", "type": "deletable", "animated": true },
+    { "id": "e_post_tap", "source": "post_open", "target": "post_tap", "type": "deletable", "animated": true },
+    { "id": "e_post_end", "source": "post_tap", "target": "post_end", "type": "deletable", "animated": true },
+
+    { "id": "e_sw_default", "source": "switch_1", "sourceHandle": "default", "target": "default_shot", "type": "deletable", "animated": true },
+    { "id": "e_default_end", "source": "default_shot", "target": "default_end", "type": "deletable", "animated": true }
+  ],
+  "globals": [
+    { "name": "username", "value": "hello@example.com", "description": "Tài khoản đăng nhập" },
+    { "name": "loginX", "value": 540, "description": "Toạ độ X nút đăng nhập" },
+    { "name": "loginY", "value": 1180, "description": "Toạ độ Y nút đăng nhập" }
+  ]
+}

@@ -1,0 +1,217 @@
+{
+  "version": 1,
+  "nodes": [
+    {
+      "id": "pusher_1",
+      "type": "pusherListen",
+      "position": { "x": 40, "y": 0 },
+      "data": {
+        "type": "pusherListen",
+        "label": "Pusher Listen",
+        "values": {
+          "appKey": "a1b2c3d4e5f6",
+          "cluster": "ap1",
+          "channel": "device-001",
+          "event": "command"
+        }
+      }
+    },
+    {
+      "id": "start_1",
+      "type": "start",
+      "position": { "x": 360, "y": 0 },
+      "data": {
+        "type": "start",
+        "label": "Start",
+        "values": {}
+      }
+    },
+    {
+      "id": "open_1",
+      "type": "managerApp",
+      "position": { "x": 200, "y": 130 },
+      "data": {
+        "type": "managerApp",
+        "label": "Manager App",
+        "values": {
+          "action": "open",
+          "package": "com.android.chrome",
+          "permission": ""
+        }
+      }
+    },
+    {
+      "id": "grant_1",
+      "type": "managerApp",
+      "position": { "x": 200, "y": 260 },
+      "data": {
+        "type": "managerApp",
+        "label": "Manager App",
+        "values": {
+          "action": "grant",
+          "package": "com.android.chrome",
+          "permission": "android.permission.CAMERA"
+        }
+      }
+    },
+    {
+      "id": "wait_1",
+      "type": "wait",
+      "position": { "x": 200, "y": 390 },
+      "data": {
+        "type": "wait",
+        "label": "Wait",
+        "values": { "ms": 1500 }
+      }
+    },
+    {
+      "id": "loop_1",
+      "type": "loop",
+      "position": { "x": 200, "y": 510 },
+      "data": {
+        "type": "loop",
+        "label": "Loop",
+        "values": {
+          "mode": "count",
+          "count": 3,
+          "condition": ""
+        }
+      }
+    },
+    {
+      "id": "find_1",
+      "type": "findElement",
+      "position": { "x": 200, "y": 630 },
+      "data": {
+        "type": "findElement",
+        "label": "Find Element",
+        "values": {
+          "selector": "assets/login_button.png",
+          "timeout": 5000
+        }
+      }
+    },
+    {
+      "id": "cond_1",
+      "type": "condition",
+      "position": { "x": 200, "y": 760 },
+      "data": {
+        "type": "condition",
+        "label": "Condition (If)",
+        "values": {
+          "expression": "foundElement == true"
+        }
+      }
+    },
+    {
+      "id": "tap_1",
+      "type": "tap",
+      "position": { "x": 20, "y": 910 },
+      "data": {
+        "type": "tap",
+        "label": "Tap",
+        "values": { "x": 540, "y": 1180 }
+      }
+    },
+    {
+      "id": "input_1",
+      "type": "inputText",
+      "position": { "x": 20, "y": 1030 },
+      "data": {
+        "type": "inputText",
+        "label": "Input Text",
+        "values": {
+          "text": "hello@example.com",
+          "selector": "#email"
+        }
+      }
+    },
+    {
+      "id": "swipe_1",
+      "type": "swipe",
+      "position": { "x": 20, "y": 1150 },
+      "data": {
+        "type": "swipe",
+        "label": "Swipe",
+        "values": {
+          "x1": 540,
+          "y1": 1600,
+          "x2": 540,
+          "y2": 600,
+          "duration": 300
+        }
+      }
+    },
+    {
+      "id": "home_1",
+      "type": "home",
+      "position": { "x": 20, "y": 1270 },
+      "data": {
+        "type": "home",
+        "label": "Home button",
+        "values": {}
+      }
+    },
+    {
+      "id": "end_ok",
+      "type": "end",
+      "position": { "x": 20, "y": 1390 },
+      "data": {
+        "type": "end",
+        "label": "End",
+        "values": {}
+      }
+    },
+    {
+      "id": "shot_1",
+      "type": "screenshot",
+      "position": { "x": 400, "y": 910 },
+      "data": {
+        "type": "screenshot",
+        "label": "Screenshot",
+        "values": { "filename": "error_state.png" }
+      }
+    },
+    {
+      "id": "kill_1",
+      "type": "managerApp",
+      "position": { "x": 400, "y": 1030 },
+      "data": {
+        "type": "managerApp",
+        "label": "Manager App",
+        "values": {
+          "action": "kill",
+          "package": "com.android.chrome",
+          "permission": ""
+        }
+      }
+    },
+    {
+      "id": "end_fail",
+      "type": "end",
+      "position": { "x": 400, "y": 1150 },
+      "data": {
+        "type": "end",
+        "label": "End",
+        "values": {}
+      }
+    }
+  ],
+  "edges": [
+    { "id": "e_pusher_open", "source": "pusher_1", "target": "open_1", "type": "deletable", "animated": true },
+    { "id": "e_start_open", "source": "start_1", "target": "open_1", "type": "deletable", "animated": true },
+    { "id": "e_open_grant", "source": "open_1", "target": "grant_1", "type": "deletable", "animated": true },
+    { "id": "e_grant_wait", "source": "grant_1", "target": "wait_1", "type": "deletable", "animated": true },
+    { "id": "e_wait_loop", "source": "wait_1", "target": "loop_1", "type": "deletable", "animated": true },
+    { "id": "e_loop_find", "source": "loop_1", "target": "find_1", "type": "deletable", "animated": true },
+    { "id": "e_find_cond", "source": "find_1", "target": "cond_1", "type": "deletable", "animated": true },
+    { "id": "e_cond_tap", "source": "cond_1", "sourceHandle": "true", "target": "tap_1", "type": "deletable", "animated": true },
+    { "id": "e_tap_input", "source": "tap_1", "target": "input_1", "type": "deletable", "animated": true },
+    { "id": "e_input_swipe", "source": "input_1", "target": "swipe_1", "type": "deletable", "animated": true },
+    { "id": "e_swipe_home", "source": "swipe_1", "target": "home_1", "type": "deletable", "animated": true },
+    { "id": "e_home_endok", "source": "home_1", "target": "end_ok", "type": "deletable", "animated": true },
+    { "id": "e_cond_shot", "source": "cond_1", "sourceHandle": "false", "target": "shot_1", "type": "deletable", "animated": true },
+    { "id": "e_shot_kill", "source": "shot_1", "target": "kill_1", "type": "deletable", "animated": true },
+    { "id": "e_kill_endfail", "source": "kill_1", "target": "end_fail", "type": "deletable", "animated": true }
+  ]
+}
