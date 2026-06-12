@@ -33,24 +33,24 @@ class FlowRepository:
         return doc
 
     def from_supabase(self, flow_id: str) -> FlowDocument:
-        """Đọc 1 flow công khai qua REST: GET /rest/v1/flows?id=eq.<id>&select=document."""
+        """Read a public flow via REST: GET /rest/v1/flows?id=eq.<id>&select=document."""
         if not self.supabase_url or not self.publishable_key:
-            raise RuntimeError("Chưa cấu hình Supabase URL / publishable key (vào Settings).")
+            raise RuntimeError("Supabase URL / publishable key not configured (check Settings).")
         url = f"{self.supabase_url}/rest/v1/flows"
         params = {"id": f"eq.{flow_id}", "select": "document,name"}
         headers = {
             "apikey": self.publishable_key,
             "Authorization": f"Bearer {self.publishable_key}",
         }
-        log.info("Tải flow %s từ Supabase…", flow_id)
+        log.info("Loading flow %s from Supabase…", flow_id)
         resp = requests.get(url, params=params, headers=headers, timeout=self.timeout)
         resp.raise_for_status()
         rows = resp.json()
         if not rows:
-            raise RuntimeError(f"Flow '{flow_id}' không tồn tại hoặc không công khai (is_public=false).")
+            raise RuntimeError(f"Flow '{flow_id}' does not exist or is not public (is_public=false).")
         document = rows[0].get("document")
         if not document:
-            raise RuntimeError(f"Flow '{flow_id}' không có trường document.")
+            raise RuntimeError(f"Flow '{flow_id}' has no document field.")
         doc = FlowDocument.from_dict(document)
         _warn(doc)
         return doc

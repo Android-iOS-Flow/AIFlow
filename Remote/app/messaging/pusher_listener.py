@@ -24,15 +24,15 @@ class PusherListener:
         self._pusher = None
 
     def start(self) -> bool:
-        """Khởi động listener. Trả False nếu thiếu lib / cấu hình (đã log)."""
+        """Start listener. Returns False if lib/config missing (already logged)."""
         if not self.app_key or not self.channel or not self.event:
-            log.warning("pusherListen thiếu appKey/channel/event -> bỏ qua.")
+            log.warning("pusherListen missing appKey/channel/event -> skipping.")
             return False
         try:
             import pysher  # type: ignore
         except ImportError:
-            log.warning("Node pusherListen cần 'pysher' (pip install -r requirements-optional.txt). "
-                        "Bỏ qua listener cho channel '%s'.", self.channel)
+            log.warning("Node pusherListen requires 'pysher' (pip install -r requirements-optional.txt). "
+                        "Skipping listener for channel '%s'.", self.channel)
             return False
 
         try:
@@ -45,10 +45,10 @@ class PusherListener:
 
             self._pusher.connection.bind("pusher:connection_established", _connected)
             self._pusher.connect()
-            log.info("Pusher: đang kết nối (cluster=%s)…", self.cluster)
+            log.info("Pusher: connecting (cluster=%s)…", self.cluster)
             return True
         except Exception as e:  # noqa: BLE001
-            log.error("Khởi động Pusher lỗi: %s", e)
+            log.error("Failed to start Pusher: %s", e)
             return False
 
     def _handle(self, data: Any) -> None:
@@ -58,11 +58,11 @@ class PusherListener:
                 payload = json.loads(data)
             except json.JSONDecodeError:
                 payload = data
-        log.info("Pusher event '%s' nhận payload: %r", self.event, payload)
+        log.info("Pusher event '%s' received payload: %r", self.event, payload)
         try:
             self.on_event(payload)
         except Exception as e:  # noqa: BLE001
-            log.error("Xử lý sự kiện Pusher lỗi: %s", e)
+            log.error("Error handling Pusher event: %s", e)
 
     def stop(self) -> None:
         if self._pusher is not None:
@@ -71,4 +71,4 @@ class PusherListener:
             except Exception:  # noqa: BLE001
                 pass
             self._pusher = None
-            log.info("Pusher: đã ngắt kết nối '%s'.", self.channel)
+            log.info("Pusher: disconnected '%s'.", self.channel)

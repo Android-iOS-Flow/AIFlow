@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="vi">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,13 +11,13 @@
     <div class="brand">📱 AIFlow <span>Remote</span></div>
     <nav>
       <a href="{{ url_for('dashboard') }}">Dashboard</a>
-      <a href="{{ url_for('settings_page') }}">Cài đặt</a>
+      <a href="{{ url_for('settings_page') }}">Settings</a>
     </nav>
   </header>
   <main class="container">
     {% block content %}{% endblock %}
   </main>
-  <footer class="foot">AIFlow Remote · engine thực thi Flow điều khiển điện thoại</footer>
+  <footer class="foot">AIFlow Remote · Flow execution engine for phone automation</footer>
   {% block scripts %}{% endblock %}
 </body>
 </html>

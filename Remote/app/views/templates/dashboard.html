@@ -3,49 +3,49 @@
 {% block content %}
 <section class="grid">
   <div class="card">
-    <h2>Trạng thái</h2>
-    <div class="stat-row"><span>Nền tảng</span><b>{{ platform }}</b></div>
+    <h2>Status</h2>
+    <div class="stat-row"><span>Platform</span><b>{{ platform }}</b></div>
     <div class="stat-row"><span>Driver</span><b id="s-driver">{{ status.driver }}</b></div>
-    <div class="stat-row"><span>Thiết bị</span>
+    <div class="stat-row"><span>Device</span>
       <b id="s-device" class="{{ 'ok' if status.device.ok else 'bad' }}">
-        {{ '● sẵn sàng' if status.device.ok else '● chưa nối' }}
+        {{ '● ready' if status.device.ok else '● not connected' }}
       </b>
     </div>
-    <div class="stat-row"><span>Task đang chạy</span><b id="s-active">{{ status.active_tasks }}</b></div>
-    <div class="stat-row"><span>Listener (pusher)</span><b id="s-listeners">{{ status.listeners }}</b></div>
+    <div class="stat-row"><span>Active tasks</span><b id="s-active">{{ status.active_tasks }}</b></div>
+    <div class="stat-row"><span>Listeners (pusher)</span><b id="s-listeners">{{ status.listeners }}</b></div>
   </div>
 
   <div class="card">
-    <h2>Trigger “Run” (Ably)</h2>
-    <p class="muted">Lắng nghe lệnh Run từ web app để tự chạy flow theo flowId.</p>
-    <div class="stat-row"><span>Trạng thái</span>
+    <h2>Trigger "Run" (Ably)</h2>
+    <p class="muted">Listen for Run commands from web app to auto-execute flows by flowId.</p>
+    <div class="stat-row"><span>Status</span>
       <b id="s-trigger" class="{{ 'ok' if status.trigger_running else 'bad' }}">
-        {{ '● đang nghe' if status.trigger_running else '● tắt' }}
+        {{ '● listening' if status.trigger_running else '● off' }}
       </b>
     </div>
     <div class="actions">
-      <form method="post" action="{{ url_for('trigger_start') }}"><button class="btn">Bật</button></form>
-      <form method="post" action="{{ url_for('trigger_stop') }}"><button class="btn ghost">Tắt</button></form>
+      <form method="post" action="{{ url_for('trigger_start') }}"><button class="btn">Start</button></form>
+      <form method="post" action="{{ url_for('trigger_stop') }}"><button class="btn ghost">Stop</button></form>
     </div>
   </div>
 
   <div class="card">
-    <h2>Chạy thủ công</h2>
-    <p class="muted">Nhập flowId (flow công khai trên Supabase) để chạy ngay.</p>
+    <h2>Manual Run</h2>
+    <p class="muted">Enter flowId (public flow on Supabase) to run immediately.</p>
     <form method="post" action="{{ url_for('run_flow') }}" class="run-form">
       <input type="text" name="flow_id" placeholder="flowId (UUID)" required>
-      <button class="btn">▶ Chạy</button>
+      <button class="btn">▶ Run</button>
     </form>
     {% if status.last_run %}
-    <p class="muted small">Lần chạy gần nhất: {{ status.last_run.label or '—' }}
-      ({{ status.last_run.nodes }} node)</p>
+    <p class="muted small">Last run: {{ status.last_run.label or '—' }}
+      ({{ status.last_run.nodes }} nodes)</p>
     {% endif %}
   </div>
 </section>
 
 <section class="card logs">
-  <h2>Nhật ký <span class="muted small">(tự cập nhật)</span></h2>
-  <pre id="logbox" class="logbox">Đang tải…</pre>
+  <h2>Logs <span class="muted small">(auto-refresh)</span></h2>
+  <pre id="logbox" class="logbox">Loading…</pre>
 </section>
 {% endblock %}
 

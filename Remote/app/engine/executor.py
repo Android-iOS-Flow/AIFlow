@@ -44,11 +44,11 @@ class Executor:
 
     # --- API công khai --------------------------------------------------
     def run(self, block: bool = True) -> None:
-        """Khởi chạy flow. block=True: chạy entry start tuần tự tới xong (CLI/one-shot).
-        block=False: spawn thread cho mỗi entry start (daemon/web)."""
+        """Start flow execution. block=True: run entry start sequentially (CLI/one-shot).
+        block=False: spawn thread for each entry start (daemon/web)."""
         entries = self.doc.entries()
         if not entries:
-            log.warning("Flow không có entry để chạy.")
+            log.warning("Flow has no entry nodes to run.")
         for entry in entries:
             if entry.type == "pusherListen":
                 self._register_pusher(entry)
@@ -81,14 +81,14 @@ class Executor:
         return t
 
     def _task(self, node_id: str, payload: Any) -> None:
-        with self._sem:  # giới hạn mức song song tối đa
+        with self._sem:  # limit max parallelism
             with self._active_lock:
                 self._active += 1
             try:
                 ctx = self._make_ctx(payload)
                 self.walk(node_id, ctx)
             except Exception as e:  # noqa: BLE001
-                log.error("Task bắt đầu từ %s lỗi: %s", node_id, e)
+                log.error("Task starting from %s failed: %s", node_id, e)
             finally:
                 with self._active_lock:
                     self._active -= 1
@@ -108,11 +108,11 @@ class Executor:
         outs = self.doc.out_edges(node.id)
         next_target = outs[0].target if outs else None
         if not next_target:
-            log.warning("pusherListen %s không có cạnh ra -> bỏ qua.", node.id)
+            log.warning("pusherListen %s has no outgoing edges -> skipping.", node.id)
             return
 
         def on_event(payload: Any) -> None:
-            # Mỗi sự kiện = 1 lượt task độc lập, chạy song song (không chặn listener).
+            # Each event = 1 independent task, runs in parallel (doesn't block listener).
             self._spawn(next_target, payload)
 
         listener = PusherListener(
@@ -139,8 +139,8 @@ class Executor:
 
             try:
                 self.exec_node(node, ctx)
-            except Exception as e:  # noqa: BLE001 — lỗi 1 node không nên giết cả task
-                log.error("Node %s (%s) lỗi: %s", node.id, node.type, e)
+            except Exception as e:  # noqa: BLE001 — node error shouldn't kill entire task
+                log.error("Node %s (%s) failed: %s", node.id, node.type, e)
                 break
 
             outs = self.doc.out_edges(node.id)
@@ -157,7 +157,7 @@ class Executor:
                 current = outs[0].target if outs else None
 
         if steps >= MAX_STEPS:
-            log.warning("Đạt giới hạn %d bước (nghi chu trình) — dừng nhánh.", MAX_STEPS)
+            log.warning("Reached %d steps limit (suspected cycle) — stopping branch.", MAX_STEPS)
 
     def _run_loop(self, node: FlowNode, outs: list[FlowEdge], ctx: Context) -> None:
         next_target = outs[0].target if outs else None
@@ -250,7 +250,7 @@ class Executor:
             ctx.vars["lastCommandOutput"] = out
             return
 
-        log.warning("Node type chưa hỗ trợ: %s (id=%s) — bỏ qua.", t, node.id)
+        log.warning("Unsupported node type: %s (id=%s) — skipping.", t, node.id)
 
     # --- tiện ích -------------------------------------------------------
     def _ui(self, fn) -> None:

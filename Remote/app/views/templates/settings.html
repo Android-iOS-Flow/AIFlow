@@ -1,11 +1,11 @@
 {% extends "base.html" %}
-{% block title %}Cài đặt · AIFlow Remote{% endblock %}
+{% block title %}Settings · AIFlow Remote{% endblock %}
 {% block content %}
 <form method="post" action="{{ url_for('settings_save') }}" class="settings">
   <section class="card">
     <h2>Supabase</h2>
-    <p class="muted">Nguồn đọc FlowDocument. Chỉ dùng publishable/anon key.</p>
-    <label>URL dự án
+    <p class="muted">Source for reading FlowDocument. Use publishable/anon key only.</p>
+    <label>Project URL
       <input type="text" name="supabase_url" value="{{ settings.supabase_url }}"
              placeholder="https://xxxx.supabase.co">
     </label>
@@ -15,37 +15,40 @@
   </section>
 
   <section class="card">
-    <h2>Ably — trigger “Run”</h2>
-    <p class="muted">Nhận lệnh chạy flow từ web app.</p>
+    <h2>Ably — trigger "Run"</h2>
+    <p class="muted">Receive flow execution commands from web app.</p>
     <label>API key
       <input type="password" name="ably_api_key" value="{{ settings.ably_api_key }}">
     </label>
-    <label>Kênh (channel)
+    <label>Channel
       <input type="text" name="ably_channel" value="{{ settings.ably_channel }}" placeholder="flow-run">
     </label>
     <label class="check">
       <input type="checkbox" name="auto_start_trigger" value="true"
              {% if settings.auto_start_trigger %}checked{% endif %}>
-      Tự bật trigger khi khởi động
+      Auto-start trigger on startup
     </label>
   </section>
 
   <section class="card">
-    <h2>Thiết bị &amp; Driver</h2>
+    <h2>Device &amp; Driver</h2>
     <label>Driver
       <select name="driver">
-        <option value="adb" {% if settings.driver=='adb' %}selected{% endif %}>adb (điều khiển thật)</option>
-        <option value="dummy" {% if settings.driver=='dummy' %}selected{% endif %}>dummy (chỉ log — test)</option>
+        <option value="adb" {% if settings.driver=='adb' %}selected{% endif %}>adb (real control)</option>
+        <option value="dummy" {% if settings.driver=='dummy' %}selected{% endif %}>dummy (log only — test)</option>
       </select>
     </label>
-    <label>Đường dẫn adb <span class="muted small">(để trống = tự dò)</span>
+    <label>ADB path <span class="muted small">(leave empty for auto-detect)</span>
       <input type="text" name="adb_path" value="{{ settings.adb_path }}"
              placeholder="adb / /data/data/com.termux/files/usr/bin/adb">
     </label>
-    <label>Device serial <span class="muted small">(khi cắm nhiều máy)</span>
+    <label>Device serial <span class="muted small">(when multiple devices)</span>
       <input type="text" name="device_serial" value="{{ settings.device_serial }}">
     </label>
-    <label>Thư mục lưu ảnh
+    <label>ADB scan interval <span class="muted small">(seconds between device scans in dashboard)</span>
+      <input type="number" name="adb_scan_interval" min="1" max="60" value="{{ settings.adb_scan_interval }}">
+    </label>
+    <label>Screenshot directory
       <input type="text" name="screenshot_dir" value="{{ settings.screenshot_dir }}">
     </label>
   </section>
@@ -53,22 +56,22 @@
   <section class="card">
     <h2>Engine &amp; Web</h2>
     <div class="two">
-      <label>Số task song song tối đa
+      <label>Max parallel tasks
         <input type="number" name="max_parallel_tasks" min="1" max="32" value="{{ settings.max_parallel_tasks }}">
       </label>
-      <label>Cổng web
+      <label>Web port
         <input type="number" name="port" value="{{ settings.port }}">
       </label>
     </div>
-    <label>Host web <span class="muted small">(0.0.0.0 để truy cập từ máy khác)</span>
+    <label>Web host <span class="muted small">(0.0.0.0 to allow access from other machines)</span>
       <input type="text" name="host" value="{{ settings.host }}">
     </label>
-    <p class="muted small">Đổi host/cổng cần khởi động lại tiến trình mới có hiệu lực.</p>
+    <p class="muted small">Changing host/port requires restart to take effect.</p>
   </section>
 
   <div class="actions">
-    <button class="btn" type="submit">💾 Lưu cài đặt</button>
-    <a class="btn ghost" href="{{ url_for('dashboard') }}">Huỷ</a>
+    <button class="btn" type="submit">💾 Save Settings</button>
+    <a class="btn ghost" href="{{ url_for('dashboard') }}">Cancel</a>
   </div>
 </form>
 {% endblock %}

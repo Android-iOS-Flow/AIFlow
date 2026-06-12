@@ -42,7 +42,7 @@ class RunnerService:
             "entries": [e.id for e in doc.entries()],
             "has_listeners": False,
         }
-        log.info("Chạy flow '%s' (%d node)…", label or "(không tên)", len(doc.nodes))
+        log.info("Running flow '%s' (%d nodes)…", label or "(unnamed)", len(doc.nodes))
         ex.run(block=block)
         self._last_run["has_listeners"] = ex.has_listeners()
         if block and not ex.has_listeners():
@@ -65,12 +65,12 @@ class RunnerService:
         def on_run(payload: dict) -> None:
             flow_id = payload.get("flowId") or payload.get("flow") or payload.get("id")
             if not flow_id:
-                log.warning("Lệnh Run thiếu flowId: %r", payload)
+                log.warning("Run command missing flowId: %r", payload)
                 return
             try:
                 self.run_flow_by_id(str(flow_id), block=False)
             except Exception as e:  # noqa: BLE001
-                log.error("Chạy flow %s từ trigger lỗi: %s", flow_id, e)
+                log.error("Running flow %s from trigger failed: %s", flow_id, e)
 
         self._trigger = AblyTrigger(self.settings.ably_api_key, self.settings.ably_channel, on_run)
         return self._trigger.start()
@@ -102,6 +102,7 @@ class RunnerService:
             "driver": self.settings.driver,
             "device": health,
             "last_run": self._last_run,
+            "adb_scan_interval": self.settings.adb_scan_interval,
         }
 
     def _remove(self, ex: Executor) -> None:
@@ -116,4 +117,4 @@ class RunnerService:
             execs = list(self._executors)
         for ex in execs:
             ex.stop()
-        log.info("RunnerService đã tắt.")
+        log.info("RunnerService shut down.")

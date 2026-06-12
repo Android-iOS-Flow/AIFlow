@@ -31,8 +31,8 @@ class AdbDriver(DeviceDriver):
     def __init__(self, adb_path: str = "", serial: str = "", screenshot_dir: str = "screenshots"):
         resolved = find_adb(adb_path or None)
         if not resolved:
-            log.warning("Không tìm thấy 'adb'. Cài platform-tools hoặc đặt ADB_PATH. "
-                        "Các lệnh sẽ lỗi cho tới khi có adb.")
+            log.warning("Cannot find 'adb'. Install platform-tools or set ADB_PATH. "
+                        "Commands will fail until adb is available.")
         self.adb = resolved or "adb"
         self.serial = serial
         self.screenshot_dir = abs_path(screenshot_dir)
@@ -95,7 +95,7 @@ class AdbDriver(DeviceDriver):
         path = os.path.join(self.screenshot_dir, os.path.basename(filename) or "screenshot.png")
         with open(path, "wb") as f:
             f.write(raw)
-        log.info("Đã lưu ảnh: %s", path)
+        log.info("Screenshot saved: %s", path)
         return path
 
     def app(self, action: str, pkg: str, permission: Optional[str] = None) -> Any:
@@ -138,7 +138,7 @@ class AdbDriver(DeviceDriver):
             try:
                 el = self._match_image(selector) if is_image else self._match_ui(selector)
             except Exception as e:  # noqa: BLE001
-                log.warning("find_element lỗi: %s", e)
+                log.warning("find_element error: %s", e)
                 el = None
             if el:
                 return el
@@ -181,18 +181,18 @@ class AdbDriver(DeviceDriver):
             return ""
 
     def _match_image(self, selector: str) -> Optional[dict]:
-        """Template matching bằng OpenCV (tùy chọn). Thiếu opencv -> cảnh báo, trả None."""
+        """Template matching using OpenCV (optional). Missing opencv -> warning, return None."""
         try:
             import cv2  # type: ignore
             import numpy as np  # type: ignore
         except ImportError:
-            log.warning("findElement theo ảnh cần opencv-python + numpy "
-                        "(pip install -r requirements-optional.txt). Bỏ qua '%s'.", selector)
+            log.warning("findElement by image requires opencv-python + numpy "
+                        "(pip install -r requirements-optional.txt). Skipping '%s'.", selector)
             return None
 
         tpl_path = abs_path(selector)
         if not os.path.isfile(tpl_path):
-            log.warning("Không thấy file ảnh mẫu: %s", tpl_path)
+            log.warning("Template image file not found: %s", tpl_path)
             return None
 
         raw = self._run(["exec-out", "screencap", "-p"], timeout=30, binary=True)
